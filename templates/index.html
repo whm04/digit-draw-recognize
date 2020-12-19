@@ -94,10 +94,6 @@
              var ctx = c.getContext("2d");
 
 				var imgData = ctx.getImageData(0, 0, c.width, c.height);
-
-				//alert(imgData.data);
-
-				// invert colors
 				var i;
 				for (i = 0; i < imgData.data.length; i += 4) {
 				  imgData.data[i] = 255-imgData.data[i];
@@ -107,48 +103,22 @@
 				}
          
 
-           namespace = '/test';
-            var socket = io(namespace);
+		    namespace = '/test';
+		    var socket = io(namespace);
+		    socket.on('connect', function() 
+		          {
+			 	socket.emit('my event', {data: c.toDataURL()}); 
+		    	  });
 
-    
-    socket.on('connect', function() 
-    {
-         //socket.emit('my event', {data: c.toDataURL()});
-         socket.emit('my event', {data: c.toDataURL()}); 
+		    var socket1 = io() ;
+		    socket.on('log', function(payload) 
+			      {
+	               		    document.getElementById("predicted").innerHTML  = "predited number :"+payload.data;
 
-    });
-
-
-    var socket1 = io() ;
-
-   //socket1.on('log', function(payload) {
-   	socket.on('log', function(payload) {
-    //alert(payload.data);
-    document.getElementById("predicted").innerHTML  = "predited number :"+payload.data;
-
-         }) ;
-    	
-			
-			//var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-			//window.location.href=image; // it will save locally
-			//alert(image.length);
-    
-
-    /*
-   		 var dataURL = c.toDataURL();
-            $.ajax({
-  					type: "POST",
-  					url: "http://127.0.0.1:5000/hook",
-  				data:{
-    					imageBase64: dataURL
-  					}
-				}).done(function() {
-  				console.log('sent');
-				});
-    */
+			 }) ;
 
 
-    	  }
+    	     }
 
 
 
@@ -169,10 +139,8 @@
     cw = $('#number').width();
     $('#number').css({'height': cw + 'px'});
 
-    // From https://www.html5canvastutorials.com/labs/html5-canvas-paint-application/
     var canvas = document.getElementById('myCanvas');
     var context = canvas.getContext('2d');
-
     var compuetedStyle = getComputedStyle(document.getElementById('paint'));
     canvas.width = parseInt(compuetedStyle.getPropertyValue('width'));
     canvas.height = parseInt(compuetedStyle.getPropertyValue('height'));
@@ -219,10 +187,7 @@
       $('#number').html('');
     });
     
-
-   
-    
     </script>
-    <!-- <button id="i" onclick="save_image()">save</button> -->
+
   </body>
 </html>
